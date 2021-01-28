@@ -91,6 +91,14 @@ var (
 		// TODO: Add a details field with all the alerts.
 	}
 
+	// DefaultFeishuRobotConfig defines default values for feishu robot configurations.
+	DefaultFeishuRobotConfig = FeishuRobotConfig{
+		NotifierConfig: NotifierConfig{
+			VSendResolved: false,
+		},
+		Message: `{{ template "feishurobot.default.message" . }}`,
+	}
+
 	// DefaultWechatConfig defines default values for wechat configurations.
 	DefaultWechatConfig = WechatConfig{
 		NotifierConfig: NotifierConfig{
@@ -387,6 +395,27 @@ func (c *WebhookConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	if c.URL.Scheme != "https" && c.URL.Scheme != "http" {
 		return fmt.Errorf("scheme required for webhook url")
 	}
+	return nil
+}
+
+// FeishuRobotConfig configures notifications via FeishuRobot.
+type FeishuRobotConfig struct {
+	NotifierConfig `yaml:",inline" json:",inline"`
+
+	HTTPConfig *commoncfg.HTTPClientConfig `yaml:"http_config,omitempty" json:"http_config,omitempty"`
+
+	APIURL  *URL   `yaml:"api_url,omitempty" json:"api_url,omitempty"`
+	Message string `yaml:"message,omitempty" json:"message,omitempty"`
+}
+
+// UnmarshalYAML implements the yaml.Unmarshaler interface.
+func (c *FeishuRobotConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	*c = DefaultFeishuRobotConfig
+	type plain FeishuRobotConfig
+	if err := unmarshal((*plain)(c)); err != nil {
+		return err
+	}
+
 	return nil
 }
 

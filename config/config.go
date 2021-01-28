@@ -347,6 +347,15 @@ func (c *Config) UnmarshalYAML(unmarshal func(interface{}) error) error {
 				ogc.APIKey = c.Global.OpsGenieAPIKey
 			}
 		}
+		for _, fsc := range rcv.FeishuRobotConfigs {
+			if fsc.HTTPConfig == nil {
+				fsc.HTTPConfig = c.Global.HTTPConfig
+			}
+
+			if fsc.APIURL == nil {
+				return fmt.Errorf("no Feishu Robot URL set")
+			}
+		}
 		for _, wcc := range rcv.WechatConfigs {
 			if wcc.HTTPConfig == nil {
 				wcc.HTTPConfig = c.Global.HTTPConfig
@@ -692,14 +701,15 @@ type Receiver struct {
 	// A unique identifier for this receiver.
 	Name string `yaml:"name" json:"name"`
 
-	EmailConfigs     []*EmailConfig     `yaml:"email_configs,omitempty" json:"email_configs,omitempty"`
-	PagerdutyConfigs []*PagerdutyConfig `yaml:"pagerduty_configs,omitempty" json:"pagerduty_configs,omitempty"`
-	SlackConfigs     []*SlackConfig     `yaml:"slack_configs,omitempty" json:"slack_configs,omitempty"`
-	WebhookConfigs   []*WebhookConfig   `yaml:"webhook_configs,omitempty" json:"webhook_configs,omitempty"`
-	OpsGenieConfigs  []*OpsGenieConfig  `yaml:"opsgenie_configs,omitempty" json:"opsgenie_configs,omitempty"`
-	WechatConfigs    []*WechatConfig    `yaml:"wechat_configs,omitempty" json:"wechat_configs,omitempty"`
-	PushoverConfigs  []*PushoverConfig  `yaml:"pushover_configs,omitempty" json:"pushover_configs,omitempty"`
-	VictorOpsConfigs []*VictorOpsConfig `yaml:"victorops_configs,omitempty" json:"victorops_configs,omitempty"`
+	EmailConfigs       []*EmailConfig       `yaml:"email_configs,omitempty" json:"email_configs,omitempty"`
+	PagerdutyConfigs   []*PagerdutyConfig   `yaml:"pagerduty_configs,omitempty" json:"pagerduty_configs,omitempty"`
+	SlackConfigs       []*SlackConfig       `yaml:"slack_configs,omitempty" json:"slack_configs,omitempty"`
+	WebhookConfigs     []*WebhookConfig     `yaml:"webhook_configs,omitempty" json:"webhook_configs,omitempty"`
+	OpsGenieConfigs    []*OpsGenieConfig    `yaml:"opsgenie_configs,omitempty" json:"opsgenie_configs,omitempty"`
+	WechatConfigs      []*WechatConfig      `yaml:"wechat_configs,omitempty" json:"wechat_configs,omitempty"`
+	PushoverConfigs    []*PushoverConfig    `yaml:"pushover_configs,omitempty" json:"pushover_configs,omitempty"`
+	VictorOpsConfigs   []*VictorOpsConfig   `yaml:"victorops_configs,omitempty" json:"victorops_configs,omitempty"`
+	FeishuRobotConfigs []*FeishuRobotConfig `yaml:"feishurobot_configs,omitempty" json:"feishurobot_configs,omitempty"`
 }
 
 // UnmarshalYAML implements the yaml.Unmarshaler interface for Receiver.
