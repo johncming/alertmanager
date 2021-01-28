@@ -50,6 +50,7 @@ import (
 	"github.com/prometheus/alertmanager/nflog"
 	"github.com/prometheus/alertmanager/notify"
 	"github.com/prometheus/alertmanager/notify/email"
+	"github.com/prometheus/alertmanager/notify/feishurobot"
 	"github.com/prometheus/alertmanager/notify/opsgenie"
 	"github.com/prometheus/alertmanager/notify/pagerduty"
 	"github.com/prometheus/alertmanager/notify/pushover"
@@ -151,6 +152,9 @@ func buildReceiverIntegrations(nc *config.Receiver, tmpl *template.Template, log
 	}
 	for i, c := range nc.OpsGenieConfigs {
 		add("opsgenie", i, c, func(l log.Logger) (notify.Notifier, error) { return opsgenie.New(c, tmpl, l) })
+	}
+	for i, c := range nc.FeishuRobotConfigs {
+		add("feishurobot", i, c, func(l log.Logger) (notify.Notifier, error) { return feishurobot.New(c, tmpl, l) })
 	}
 	for i, c := range nc.WechatConfigs {
 		add("wechat", i, c, func(l log.Logger) (notify.Notifier, error) { return wechat.New(c, tmpl, l) })
